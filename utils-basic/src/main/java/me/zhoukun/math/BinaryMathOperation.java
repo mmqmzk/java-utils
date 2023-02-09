@@ -135,7 +135,8 @@ public enum BinaryMathOperation {
                         DoubleBinaryOperator doubleOp,
                         BinaryOperator<BigInteger> bigIntOp,
                         BinaryOperator<BigDecimal> decimalOp) {
-        holder = new BinaryOperatorHolder(intOp,
+        holder = new BinaryOperatorHolder(
+                intOp,
                 longOp, doubleOp,
                 bigIntOp, decimalOp);
     }
