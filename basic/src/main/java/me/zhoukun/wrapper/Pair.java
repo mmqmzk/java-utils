@@ -16,7 +16,7 @@ import java.util.function.*;
 @Getter
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(staticName = "of")
 public final class Pair<L, R> {
     private static final Pair<Object, Object> EMPTY
             = of(null, null);
@@ -25,10 +25,6 @@ public final class Pair<L, R> {
 
     public static <L, R> Pair<L, R> empty() {
         return (Pair<L, R>) EMPTY;
-    }
-
-    public static <L, R> Pair<L, R> of(L left, R right) {
-        return new Pair<>(left, right);
     }
 
     public static <L, R> Pair<L, R> ofLeft(L left) {

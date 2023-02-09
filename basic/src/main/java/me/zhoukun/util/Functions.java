@@ -1,14 +1,13 @@
 package me.zhoukun.util;
 
 import com.google.common.primitives.Floats;
-import lombok.*;
+import lombok.NonNull;
 import me.zhoukun.math.BinaryMathOperation;
+import me.zhoukun.wrapper.Holder;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.function.*;
 import java.util.regex.Pattern;
@@ -1584,10 +1583,10 @@ public enum Functions {
         if (stream == null) {
             return identity;
         }
-        var holder = new Holder<R>(identity);
+        var holder = Holder.of(identity);
         BiFunction<Holder<R>, T, Holder<R>> wrapAccumulator =
                 (currentHolder, current) ->
-                        new Holder<>(
+                        Holder.of(
                                 accumulator.apply(
                                         currentHolder.getValue(), current));
         BinaryOperator<Holder<R>> combiner =
@@ -1684,140 +1683,4 @@ public enum Functions {
         return nth(stream, n).orElse(defaultValue);
     }
 
-    @Getter
-    @AllArgsConstructor
-    public enum UnaryMathOperation {
-        Negate(
-                aInt -> -aInt,
-                aLong -> -aLong,
-                aDouble -> -aDouble,
-                BigInteger::negate,
-                BigDecimal::negate
-        ),
-        LogN(
-                aInt -> (int) Math.log(aInt),
-                aLong -> (long) Math.log(aLong),
-                Math::log,
-                aBigInt ->
-                        BigInteger.valueOf(
-                                (long) Math.log(aBigInt.doubleValue())),
-                aDecimal ->
-                        BigDecimal.valueOf(Math.log(aDecimal.doubleValue()))
-        ),
-        Log2(
-                aInt -> (int) (Math.log(aInt) / Math.log(2)),
-                aLong -> (long) (Math.log(aLong) / Math.log(2)),
-                aDouble -> Math.log(aDouble) / Math.log(2),
-                aBigInt ->
-                        BigInteger.valueOf(
-                                (long) (Math.log(aBigInt.doubleValue())
-                                        / Math.log(2))),
-                aDecimal ->
-                        BigDecimal.valueOf(
-                                Math.log(aDecimal.doubleValue())
-                                        / Math.log(2))
-        ),
-        Log10(
-                aInt -> (int) (Math.log(aInt) / Math.log(10)),
-                aLong -> (long) (Math.log(aLong) / Math.log(10)),
-                aDouble -> Math.log(aDouble) / Math.log(10),
-                aBigInt ->
-                        BigInteger.valueOf(
-                                (long) (Math.log(aBigInt.doubleValue())
-                                        / Math.log(10))),
-                aDecimal ->
-                        BigDecimal.valueOf(
-                                Math.log(aDecimal.doubleValue())
-                                        / Math.log(10))
-        ),
-        Exp(
-                aInt -> (int) Math.exp(aInt),
-                aLong -> (long) Math.exp(aLong),
-                Math::exp,
-                aBigInt ->
-                        BigInteger.valueOf(
-                                (long) Math.exp(aBigInt.doubleValue())),
-                aDecimal ->
-                        BigDecimal.valueOf(
-                                Math.exp(aDecimal.doubleValue()))
-        ),
-        ;
-        private IntUnaryOperator intOp;
-
-        private LongUnaryOperator longOp;
-
-        private DoubleUnaryOperator doubleOp;
-
-        private UnaryOperator<BigInteger> bigIntOp;
-
-        private UnaryOperator<BigDecimal> decimalOp;
-
-    }
-
-    @Getter
-    public enum NumberComparison {
-        Equal(
-                Utils.constZero()
-        ),
-        Less(
-                Utils.constZero()::lt
-        ),
-        LessOrEqual(
-                Utils.constZero()::le
-        ),
-        Greater(
-                Utils.constZero()::gt
-        ),
-        GreaterOrEqual(
-                Utils.constZero()::ge
-        ),
-        ;
-        private final Predicate<Integer> testResultBoxed;
-
-        private final IntPredicate testResult;
-
-        NumberComparison(IntPredicate testResult) {
-            this.testResult = testResult;
-            this.testResultBoxed =
-                    aInteger ->
-                            aInteger != null
-                                    && testResult.test(aInteger);
-        }
-    }
-
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static final class Holder<T> implements
-            UnaryOperator<T>, Consumer<T>,
-            Supplier<T>, Predicate<Object> {
-        private T value;
-
-        public Holder<T> setValue(T value) {
-            this.value = value;
-            return this;
-        }
-
-        @Override
-        public T apply(T t) {
-            var oldValue = value;
-            value = t;
-            return oldValue;
-        }
-
-        @Override
-        public void accept(T t) {
-            setValue(t);
-        }
-
-        @Override
-        public T get() {
-            return value;
-        }
-
-        @Override
-        public boolean test(Object o) {
-            return value != null;
-        }
-    }
 }

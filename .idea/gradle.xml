@@ -11,7 +11,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/utils-basic" />
+            <option value="$PROJECT_DIR$/basic" />
           </set>
         </option>
       </GradleProjectSettings>

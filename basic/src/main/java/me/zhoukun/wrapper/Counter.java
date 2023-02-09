@@ -1,10 +1,10 @@
 package me.zhoukun.wrapper;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
+import lombok.ToString;
 
-import java.util.Objects;
 import java.util.function.IntConsumer;
 import java.util.function.IntPredicate;
 import java.util.function.IntSupplier;
@@ -16,7 +16,8 @@ import java.util.stream.IntStream;
  * @date 2023/2/9 20:55
  **/
 @Getter
-@Setter
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public final class Counter extends ConstInt
         implements IntSupplier, IntConsumer, IntUnaryOperator, IntPredicate {
     private int value;
@@ -38,8 +39,11 @@ public final class Counter extends ConstInt
         return of(ZERO);
     }
 
-
     public Counter set(int value) {
+        return setValue(value);
+    }
+
+    public Counter setValue(int value) {
         this.value = value;
         return this;
     }
@@ -100,12 +104,7 @@ public final class Counter extends ConstInt
 
     @Override
     public void accept(int value) {
-        set(value);
-    }
-
-    @Override
-    public int getAsInt() {
-        return value;
+        setValue(value);
     }
 
     @Override
@@ -120,25 +119,5 @@ public final class Counter extends ConstInt
     @Override
     public Counter map(@NonNull IntUnaryOperator mapper) {
         return of(mapper.applyAsInt(value));
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Counter)) return false;
-        if (!super.equals(o)) return false;
-        return value == ((Counter) o).value;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), value);
-    }
-
-    @Override
-    public String toString() {
-        return "Counter{" +
-                "value=" + value +
-                '}';
     }
 }

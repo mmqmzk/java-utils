@@ -1,11 +1,7 @@
 package me.zhoukun.wrapper;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
+import lombok.*;
 
-import java.util.Objects;
 import java.util.OptionalInt;
 import java.util.function.*;
 import java.util.stream.IntStream;
@@ -15,6 +11,8 @@ import java.util.stream.IntStream;
  * @date 2023/2/9 20:55
  **/
 @Getter
+@ToString
+@EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ConstInt implements Comparable<ConstInt>,
         IntSupplier, IntConsumer, IntPredicate, IntUnaryOperator {
@@ -25,6 +23,8 @@ public class ConstInt implements Comparable<ConstInt>,
     public static final ConstInt CONST_ZERO = of(ZERO);
     protected final int constValue;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     protected final boolean constant;
 
     public static ConstInt of(int constValue) {
@@ -126,26 +126,7 @@ public class ConstInt implements Comparable<ConstInt>,
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ConstInt)) return false;
-        return constValue == ((ConstInt) o).constValue;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(constValue);
-    }
-
-    @Override
     public int compareTo(ConstInt o) {
         return Integer.compare(getValue(), o.getValue());
-    }
-
-    @Override
-    public String toString() {
-        return "ConstInt{" +
-                "constValue=" + constValue +
-                '}';
     }
 }

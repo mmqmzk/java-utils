@@ -1,7 +1,6 @@
 package me.zhoukun.math;
 
 import lombok.NonNull;
-import me.zhoukun.util.Functions;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -10,22 +9,6 @@ import java.util.Map;
 import java.util.function.*;
 
 public enum BinaryMathOperation {
-    First(
-            Functions.firstInt(),
-            Functions.firstLong(),
-            Functions.firstDouble(),
-            Functions.bFirstArg(),
-            Functions.bFirstArg()
-    ),
-
-    Second(
-            Functions.secondInt(),
-            Functions.secondLong(),
-            Functions.secondDouble(),
-            Functions.bSecondArg(),
-            Functions.bSecondArg()
-    ),
-
     Addition(
             Integer::sum,
             Long::sum,
@@ -108,6 +91,7 @@ public enum BinaryMathOperation {
         Map<Integer, BinaryOperatorHolder>
                 holderFromBoxed = new HashMap<>();
 
+        @Override
         public BinaryOperatorHolder getHolder() {
             throw new UnsupportedOperationException();
         }
